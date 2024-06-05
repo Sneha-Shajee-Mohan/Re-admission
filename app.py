@@ -43,7 +43,7 @@ def get_data():
 # ------------------------------
 # PART 0 : Overview
 # ------------------------------
-st.title('Patients Re-admission Data')
+st.title('Patients Re-admission Prediction')
 
 df_base = get_data()
 
