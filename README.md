@@ -14,9 +14,9 @@ https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-predi
 
 2. Key Variables
 
-• Target Variable: Readmission status
+    • Target Variable: Readmission status
 
-• Features: admission_type_id, discharge_disposition_id, time_in_hospital, medical_specialty,   num_procedures, num_medications, number_inpatient, number_outpatient, number_emergency, diag_1, number_diagnoses, change
+    • Features: admission_type_id, discharge_disposition_id, time_in_hospital, medical_specialty,   num_procedures, num_medications, number_inpatient, number_outpatient, number_emergency, diag_1, number_diagnoses, change
 
 3. Feature Selection and Engineering
    Based on p-values, pair-plots, Accuracy, precision
@@ -31,7 +31,9 @@ https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-predi
 **Next Steps**
 
 1)Modify User interface
+
 2)Feature selection
+
 3)Improve Accuracy
 
  
