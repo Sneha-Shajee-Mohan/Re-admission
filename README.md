@@ -6,8 +6,7 @@ Developed a machine learning model to predict the likelihood of hospital readmis
 
 **Data Preference**
 
-https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission- 
-prediction?select=diabetic_data.csv 
+https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-prediction?select=diabetic_data.csv 
 
 **Strategy**
 
