@@ -8,7 +8,18 @@ Developed a machine learning model to predict the likelihood of hospital readmis
 
 https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-prediction?select=diabetic_data.csv 
 
-**Strategy**
+**Tools Used**
+Python: Python is the primary programming language used for developing the application. It is known for its simplicity, readability, and extensive libraries for data manipulation, web development, and API integration.
+
+Streamlit: Streamlit is a popular Python library used for building interactive web applications with minimal code. It provides easy-to-use widgets and components for creating user interfaces directly from Python scripts.
+
+Pandas: Pandas is a powerful data manipulation library in Python used for data analysis and manipulation. It is used to handle and pre-process the patient data stored in the DataFrame.
+
+Git: Git is a version control system used for tracking changes in the codebase, collaborating with other developers, and managing project history. It helps in maintaining code quality, facilitating collaboration, and ensuring project integrity.
+
+Backblaze: The Backblaze application, often referred to as Backblaze Personal Backup or Backblaze Business Backup, is a software application developed by Backblaze that enables users to securely backup their files and data to the cloud.
+
+**Algorithm Description**
 
 1. Data Collection and Preprocessing
 
@@ -35,6 +46,8 @@ https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-predi
 2)Feature selection
 
 3)Improve Accuracy
+
+**Ethical Concerns**
 
  
  
