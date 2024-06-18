@@ -5,7 +5,7 @@ from utils.b2 import B2
 import pandas as pd
 from joblib import load
 import numpy as np
-
+from joblib import dump
 
 
 # ------------------------------------------------------
@@ -35,37 +35,94 @@ def get_data():
     
     return df
 
-
-
 # ------------------------------------------------------
 #                         APP
 # ------------------------------------------------------
+
 # ------------------------------
 # PART 0 : Overview
 # ------------------------------
+# Display your image at the top
+st.image('diab.jpg', use_column_width=True)  
+
 st.title('Patients Re-admission Prediction')
 
 df_base = get_data()
 
 # Load the trained model and label encoder
-model = load('decision_tree_model.joblib')
+model = load('Random_forest_compress.joblib')
 label_encoder = load('label_encoder.joblib')
+
+# dump(model, 'Random_forest_compress.joblib',compress=3)
+
+# Preset values
+presets = {
+    "Preset 1": {
+        'admission_type_id': 1,
+        'discharge_disposition_id': 1,
+        'time_in_hospital': 5,
+        'medical_specialty': 'Cardiology',
+        'num_procedures': 1,
+        'num_medications': 10,
+        'diag_1': 'ICD250',
+        'number_diagnoses': 9,
+        'change': 1,
+        'total_visits': 3
+    },
+    "Preset 2": {
+        'admission_type_id': 1,
+        'discharge_disposition_id': 1,
+        'time_in_hospital': 3,
+        'medical_specialty': 'Unknown',
+        'num_procedures': 1,
+        'num_medications': 13,
+        'diag_1': 'ICD428',
+        'number_diagnoses': 7,
+        'change': 0,
+        'total_visits': 7
+    }
+}
+
+# Create a sidebar for preset selection
+st.sidebar.title("Select a Preset")
+selected_preset = st.sidebar.selectbox("Choose a preset", ["None"] + list(presets.keys()))
+
+# If a preset is selected, load its values
+if selected_preset != "None":
+    preset_values = presets[selected_preset]
+    st.sidebar.write(f"Loaded {selected_preset} values")
+
+# st.sidebar.title("Add your medical records")
+# medical_specialty = st.sidebar.selectbox("Select your medical specialty", df_base['medical_specialty'].unique(), index=df_base['medical_specialty'].unique().tolist().index(preset_values.get('medical_specialty', '')) if selected_preset != "None" else 0)
+# num_procedures = st.sidebar.number_input("Number of Procedures", min_value=0, max_value=6, value=preset_values.get('num_procedures', 0) if selected_preset != "None" else 0)
+# num_medications = st.sidebar.number_input("Number of Medications", min_value=1, max_value=81, value=preset_values.get('num_medications', 1) if selected_preset != "None" else 1)
 
 
 # Create input fields
-st.subheader("Enter you details")
-admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()))
-discharge_disposition_id = st.selectbox("Select your admission type", sorted(df_base['discharge_disposition_id'].unique()))
-time_in_hospital = st.number_input("Enter your time in Hospital", min_value=1,max_value=14)
-medical_specialty = st.selectbox("Select your medical speciality", sorted(df_base['medical_specialty'].unique()))
-num_procedures = st.number_input("Number of Procedures", min_value=0,max_value=6)
-num_medications = st.number_input("Number of Medications", min_value=1,max_value=81)
-number_outpatient = st.number_input("Number of Outpatient", min_value=0,max_value=42)
-number_emergency = st.number_input("Number of Emergency", min_value=0,max_value=76)
-number_inpatient = st.number_input("Number of Inpatient", min_value=0,max_value=21)
-diag_1 = st.selectbox("Select your primary diagnosis", sorted(df_base['diag_1'].unique()))
-number_diagnoses = st.number_input("Number of Diagnoses", min_value=1,max_value=16)
-change = st.selectbox("Change", [0, 1])
+st.subheader("Enter your details")
+admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()), index=preset_values.get('admission_type_id', 0) if selected_preset != "None" else 0)
+discharge_disposition_id = st.selectbox("Select your discharge disposition", sorted(df_base['discharge_disposition_id'].unique()), index=preset_values.get('discharge_disposition_id', 0) if selected_preset != "None" else 0)
+time_in_hospital = st.number_input("Enter your time in Hospital", min_value=1, max_value=14, value=preset_values.get('time_in_hospital', 1) if selected_preset != "None" else 1)
+medical_specialty = st.selectbox("Select your medical specialty", df_base['medical_specialty'].unique(), index=df_base['medical_specialty'].unique().tolist().index(preset_values.get('medical_specialty', '')) if selected_preset != "None" else 0)
+num_procedures = st.number_input("Number of Procedures", min_value=0, max_value=6, value=preset_values.get('num_procedures', 0) if selected_preset != "None" else 0)
+num_medications = st.number_input("Number of Medications", min_value=1, max_value=81, value=preset_values.get('num_medications', 1) if selected_preset != "None" else 1)
+diag_1 = st.selectbox("Select your primary diagnosis", df_base['diag_1'].unique(), index=df_base['diag_1'].unique().tolist().index(preset_values.get('diag_1', '')) if selected_preset != "None" else 0)
+number_diagnoses = st.number_input("Number of Diagnoses", min_value=1, max_value=16, value=preset_values.get('number_diagnoses', 1) if selected_preset != "None" else 1)
+change = st.selectbox("Change", [0, 1], index=preset_values.get('change', 0) if selected_preset != "None" else 0)
+total_visits = st.number_input("Number of visits to hospital", min_value=0, max_value=80, value=preset_values.get('total_visits', 0) if selected_preset != "None" else 0)
+
+
+# admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()))
+# discharge_disposition_id = st.selectbox("Select your admission type", sorted(df_base['discharge_disposition_id'].unique()))
+# time_in_hospital = st.number_input("Enter your time in Hospital", min_value=1,max_value=14)
+# medical_specialty = st.selectbox("Select your medical speciality", sorted(df_base['medical_specialty'].unique()))
+# num_procedures = st.number_input("Number of Procedures", min_value=0,max_value=6)
+# num_medications = st.number_input("Number of Medications", min_value=1,max_value=81)
+# diag_1 = st.selectbox("Select your primary diagnosis", sorted(df_base['diag_1'].unique()))
+# number_diagnoses = st.number_input("Number of Diagnoses", min_value=1,max_value=16)
+# change = st.selectbox("Change", [0, 1])
+# total_visits = st.number_input("Number of visits to hospital", min_value=0,max_value=80)
+
 
 # Create a DataFrame from user inputs
 input_data = pd.DataFrame({
@@ -75,12 +132,10 @@ input_data = pd.DataFrame({
     'medical_specialty': [medical_specialty],
     'num_procedures': [num_procedures],
     'num_medications': [num_medications],
-    'number_outpatient': [number_outpatient],
-    'number_emergency': [number_emergency],
-    'number_inpatient': [number_inpatient],
     'diag_1': [diag_1],
     'number_diagnoses': [number_diagnoses],
-    'change': [change]
+    'change': [change],
+    'total_visits': [total_visits]
 })
 
 # Make predictions
@@ -95,6 +150,8 @@ if st.button("Predict"):
     # st.write(prediction)
  
     if prediction[0] == 0:
-        st.write("There is no chance of re-admission")
+        st.write(":green[There is no chance of re-admission]")
     elif prediction[0] == 1:
-        st.write("You are likely to get re-admitted within 30 days.")
+        st.write(":red[You are likely to get re-admitted within 30 days.]")
+
+

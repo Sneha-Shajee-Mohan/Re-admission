@@ -1,14 +1,14 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import confusion_matrix, precision_score, recall_score
-from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 from joblib import dump
 import os
 import streamlit as st
 from dotenv import load_dotenv
 from utils.b2 import B2
+from imblearn.over_sampling import ADASYN
+
 # ------------------------------------------------------
 #                      APP CONSTANTS
 # ------------------------------------------------------
@@ -39,8 +39,12 @@ def get_data():
 
 
 
-# Load your data (replace 'your_data.csv' with the path to your actual data)
+# Load your data 
 df = get_data()
+
+#Feature Engineering
+df['total_visits'] = df['number_outpatient'] + df['number_emergency'] + df['number_inpatient']
+df = df.drop(['number_inpatient','number_outpatient','number_emergency'], axis=1)
 
 # Preprocess categorical features
 categorical_features = ['admission_type_id','discharge_disposition_id','medical_specialty','diag_1']
@@ -48,46 +52,49 @@ le = LabelEncoder()
 for feature in categorical_features:
     df[feature] = le.fit_transform(df[feature])
 
+# Custom train_test_split based on patient_nbr
+def custom_train_test_split(df, patient_col='patient_nbr', test_size=0.3):
+    patients = df[patient_col].unique()
+    train_patients, test_patients = train_test_split(patients, test_size=test_size, random_state=42)
+    train_data = df[df[patient_col].isin(train_patients)]
+    test_data = df[df[patient_col].isin(test_patients)]
+    return train_data, test_data
 
-# Separate features and target variable
-X = df.drop('readmitted', axis=1)
-y = df['readmitted']
+train_data, test_data = custom_train_test_split(df)
 
-# Convert target variable to numerical (YES=1, NO=0)
-y = y.map({'NO': 0, 'YES': 1})
+# Split features and target
+X_train = train_data.drop(columns=['readmitted', 'patient_nbr'])
+y_train = train_data['readmitted']
+X_test = test_data.drop(columns=['readmitted', 'patient_nbr'])
+y_test = test_data['readmitted']
 
-# Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Create a decision tree classifier
-clf = DecisionTreeClassifier(random_state=42)
+# Apply ADASYN to the training set
+adasyn = ADASYN(sampling_strategy='minority', random_state=42)
+X_train_resampled, y_train_resampled = adasyn.fit_resample(X_train, y_train)
 
-# Train the model
-clf.fit(X_train, y_train)
+# Shuffle the resampled training set
+X_train_resampled, y_train_resampled = X_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True), y_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True)
 
-# Make predictions on the testing set
-# y_pred = clf.predict(X_test)
+# Initialize the RandomForestClassifier with the best parameters
+clf = RandomForestClassifier(
+    bootstrap=False,
+    class_weight='balanced',
+    max_depth=10,
+    min_samples_leaf=1,
+    min_samples_split=2,
+    n_estimators=100
+)
 
-# Evaluate model performance (you can add metrics like accuracy, precision, recall, etc.)
+clf.fit(X_train_resampled, y_train_resampled)
+# print(X_train_resampled.columns)
 
-# accuracy = accuracy_score(y_test, y_pred)
-# print("Accuracy:", accuracy)
+# Cross-validation
+# cv_scores = cross_val_score(clf, X_train_resampled, y_train_resampled, cv=5)
+# print("Cross-validation scores:", cv_scores)
+# print("Mean cross-validation score:", np.mean(cv_scores))
 
-# confusion matrix
-# Assuming you have predicted labels (y_pred) and true labels (y_true)
-# cm = confusion_matrix(y_test, y_pred)
-
-# Print the confusion matrix
-# print(cm)
-
-# Calculate precision
-# precision = precision_score(y_test, y_pred,average='weighted')
-# print("Precision:", precision)
-
-# Calculate recall
-# recall = recall_score(y_test, y_pred,average='weighted')
-# print("Recall:", recall)
 
 # Save the model
-dump(clf, 'decision_tree_model.joblib')
+dump(clf, 'Random_forest.joblib')
 dump(le, 'label_encoder.joblib')
