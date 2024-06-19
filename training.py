@@ -106,5 +106,5 @@ clf.fit(X_train_resampled, y_train_resampled)
 
 
 # Save the model
-# dump(clf, 'GradientBoostingClassifier.joblib')
-# dump(le, 'label_encoder.joblib')
+dump(clf, 'GradientBoostingClassifier.joblib')
+dump(le, 'label_encoder.joblib')
