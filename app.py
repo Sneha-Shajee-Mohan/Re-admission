@@ -27,7 +27,7 @@ b2 = B2(endpoint=os.environ['B2_ENDPOINT'],
 # ------------------------------------------------------
 #                        CACHING
 # ------------------------------------------------------
-@st.cache_data
+# @st.cache_data
 def get_data():
 #     # collect data frame of reviews and their sentiment
     b2.set_bucket(os.environ['B2_BUCKETNAME'])
@@ -50,7 +50,7 @@ st.title('Patients Re-admission Prediction')
 df_base = get_data()
 
 # Load the trained model and label encoder
-model = load('GradientBoostingClassifier.joblib')
+model = load('Random_forest_compress.joblib')
 label_encoder = load('label_encoder.joblib')
 
 # dump(model, 'Random_forest_compress.joblib',compress=3)

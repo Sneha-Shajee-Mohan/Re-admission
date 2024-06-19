@@ -74,26 +74,26 @@ X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
 # Shuffle the resampled training set
 X_train_resampled, y_train_resampled = X_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True), y_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True)
 
-# Initialize the GradientBoostingClassifier with the best parameters
+# Initialize the RandomForestClassifier with the best parameters
 
-# clf = RandomForestClassifier(
-#     bootstrap=False,
-#     class_weight='balanced',
-#     max_depth=10,
-#     min_samples_leaf=1,
-#     min_samples_split=2,
-#     n_estimators=100
-# )
-
-clf = GradientBoostingClassifier(
-    # bootstrap=False,
-    # class_weight='balanced',
-    random_state=42,
+clf = RandomForestClassifier(
+    bootstrap=False,
+    class_weight='balanced',
     max_depth=10,
     min_samples_leaf=1,
     min_samples_split=2,
-    n_estimators=200
+    n_estimators=100
 )
+
+# clf = GradientBoostingClassifier(
+#     # bootstrap=False,
+#     # class_weight='balanced',
+#     random_state=42,
+#     max_depth=10,
+#     min_samples_leaf=1,
+#     min_samples_split=2,
+#     n_estimators=200
+# )
 
 
 clf.fit(X_train_resampled, y_train_resampled)
@@ -106,5 +106,5 @@ clf.fit(X_train_resampled, y_train_resampled)
 
 
 # Save the model
-dump(clf, 'GradientBoostingClassifier.joblib')
+dump(clf, 'RandomForestClassifier.joblib')
 dump(le, 'label_encoder.joblib')
