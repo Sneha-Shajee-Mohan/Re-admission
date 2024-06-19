@@ -40,7 +40,10 @@ def get_data():
 # Load your data 
 df = get_data()
 
-#Feature Engineering
+
+# ------------------------------------------------------
+#                        FEATURE ENGINEERING
+# ------------------------------------------------------
 df['total_visits'] = df['number_outpatient'] + df['number_emergency'] + df['number_inpatient']
 df = df.drop(['number_inpatient','number_outpatient','number_emergency'], axis=1)
 
@@ -50,7 +53,12 @@ le = LabelEncoder()
 for feature in categorical_features:
     df[feature] = le.fit_transform(df[feature])
 
-# Custom train_test_split based on patient_nbr
+
+# -----------------------------------------------------------------
+#      Custom train_test_split based on patient_nbr(Unique rows)
+# -----------------------------------------------------------------
+
+
 def custom_train_test_split(df, patient_col='patient_nbr', test_size=0.3):
     patients = df[patient_col].unique()
     train_patients, test_patients = train_test_split(patients, test_size=test_size, random_state=42)
