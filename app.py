@@ -50,7 +50,7 @@ st.title('Patients Re-admission Prediction')
 df_base = get_data()
 
 # Load the trained model and label encoder
-model = load('Random_forest_compress.joblib')
+model = load('GradientBoostingClassifier.joblib')
 label_encoder = load('label_encoder.joblib')
 
 # dump(model, 'Random_forest_compress.joblib',compress=3)

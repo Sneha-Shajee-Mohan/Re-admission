@@ -1,13 +1,13 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier,GradientBoostingClassifier
 from joblib import dump
 import os
 import streamlit as st
 from dotenv import load_dotenv
 from utils.b2 import B2
-from imblearn.over_sampling import ADASYN
+from imblearn.over_sampling import ADASYN, BorderlineSMOTE
 
 # ------------------------------------------------------
 #                      APP CONSTANTS
@@ -35,8 +35,6 @@ def get_data():
     df = b2.get_df(REMOTE_DATA)
     
     return df
-
-
 
 
 # Load your data 
@@ -69,22 +67,34 @@ X_test = test_data.drop(columns=['readmitted', 'patient_nbr'])
 y_test = test_data['readmitted']
 
 
-# Apply ADASYN to the training set
-adasyn = ADASYN(sampling_strategy='minority', random_state=42)
-X_train_resampled, y_train_resampled = adasyn.fit_resample(X_train, y_train)
+# Apply BorderlineSMOTE to the training set
+smote = BorderlineSMOTE(sampling_strategy='minority', random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
 
 # Shuffle the resampled training set
 X_train_resampled, y_train_resampled = X_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True), y_train_resampled.sample(frac=1, random_state=42).reset_index(drop=True)
 
-# Initialize the RandomForestClassifier with the best parameters
-clf = RandomForestClassifier(
-    bootstrap=False,
-    class_weight='balanced',
+# Initialize the GradientBoostingClassifier with the best parameters
+
+# clf = RandomForestClassifier(
+#     bootstrap=False,
+#     class_weight='balanced',
+#     max_depth=10,
+#     min_samples_leaf=1,
+#     min_samples_split=2,
+#     n_estimators=100
+# )
+
+clf = GradientBoostingClassifier(
+    # bootstrap=False,
+    # class_weight='balanced',
+    random_state=42,
     max_depth=10,
     min_samples_leaf=1,
     min_samples_split=2,
-    n_estimators=100
+    n_estimators=200
 )
+
 
 clf.fit(X_train_resampled, y_train_resampled)
 # print(X_train_resampled.columns)
@@ -96,5 +106,5 @@ clf.fit(X_train_resampled, y_train_resampled)
 
 
 # Save the model
-dump(clf, 'Random_forest.joblib')
-dump(le, 'label_encoder.joblib')
+# dump(clf, 'GradientBoostingClassifier.joblib')
+# dump(le, 'label_encoder.joblib')
