@@ -5,7 +5,6 @@ __pycache__*
 # app
 .env
 scratch.ipynb
-data*
 # *.pickle
 
 # macOS
