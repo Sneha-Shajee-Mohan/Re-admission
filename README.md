@@ -39,13 +39,6 @@ Backblaze: The Backblaze application, often referred to as Backblaze Personal Ba
 5. Deployment
    Developed a user-friendly interface using Streamlit.
 
-**Next Steps**
-
-1)Modify User interface
-
-2)Feature selection
-
-3)Improve Accuracy
 
 **Ethical Concerns**
 

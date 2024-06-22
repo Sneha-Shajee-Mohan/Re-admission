@@ -29,7 +29,7 @@ b2 = B2(endpoint=os.environ['B2_ENDPOINT'],
 # ------------------------------------------------------
 @st.cache_data
 def get_data():
-#     # collect data frame of reviews and their sentiment
+# collect data frame of reviews and their sentiment
     b2.set_bucket(os.environ['B2_BUCKETNAME'])
     df = b2.get_df(REMOTE_DATA)
     
@@ -44,13 +44,14 @@ def get_data():
 # ------------------------------
 # Display your image at the top
 st.image('diab.jpg', use_column_width=True)  
-
 st.title('Patients Re-admission Prediction')
 
 df_base = get_data()
 
 # Load the trained model and label encoder
-model = load('Random_forest_compress.joblib')
+# model = load('Random_forest_compress.joblib')
+model = load('RandomForestClassifier.joblib')
+
 label_encoder = load('label_encoder.joblib')
 
 # dump(model, 'Random_forest_compress.joblib',compress=3)
@@ -65,8 +66,8 @@ presets = {
         'num_procedures': 1,
         'num_medications': 10,
         'diag_1': 'ICD250',
-        'number_diagnoses': 9,
-        'change': 1,
+        'high_number_diagnoses': 0,
+        # 'change': 1,
         'total_visits': 3
     },
     "Preset 2": {
@@ -77,8 +78,8 @@ presets = {
         'num_procedures': 1,
         'num_medications': 13,
         'diag_1': 'ICD428',
-        'number_diagnoses': 7,
-        'change': 0,
+        'high_number_diagnoses': 0,
+        # 'change': 0,
         'total_visits': 7
     }
 }
@@ -94,8 +95,10 @@ if selected_preset != "None":
 
 # st.sidebar.title("Add your medical records")
 # medical_specialty = st.sidebar.selectbox("Select your medical specialty", df_base['medical_specialty'].unique(), index=df_base['medical_specialty'].unique().tolist().index(preset_values.get('medical_specialty', '')) if selected_preset != "None" else 0)
-# num_procedures = st.sidebar.number_input("Number of Procedures", min_value=0, max_value=6, value=preset_values.get('num_procedures', 0) if selected_preset != "None" else 0)
-# num_medications = st.sidebar.number_input("Number of Medications", min_value=1, max_value=81, value=preset_values.get('num_medications', 1) if selected_preset != "None" else 1)
+# st.sidebar.caption('Select "1" if it\'s more than three or else "0"', unsafe_allow_html=False, help=None)
+# high_num_procedures = st.sidebar.selectbox('Number of Medical procedures', [0, 1], index=(preset_values.get('high_num_procedures', 0)) if selected_preset != "None" else 0)
+# st.sidebar.caption('Select "1" if it\'s more than Eight or else "0"', unsafe_allow_html=False, help=None)
+# high_number_diagnoses = st.sidebar.selectbox('Number of Medical Diagnosis',[0, 1], index=(preset_values.get('high_number_diagnoses', 0)) if selected_preset != "None" else 0)
 
 
 # Create input fields
@@ -107,9 +110,12 @@ medical_specialty = st.selectbox("Select your medical specialty", df_base['medic
 num_procedures = st.number_input("Number of Procedures", min_value=0, max_value=6, value=preset_values.get('num_procedures', 0) if selected_preset != "None" else 0)
 num_medications = st.number_input("Number of Medications", min_value=1, max_value=81, value=preset_values.get('num_medications', 1) if selected_preset != "None" else 1)
 diag_1 = st.selectbox("Select your primary diagnosis", df_base['diag_1'].unique(), index=df_base['diag_1'].unique().tolist().index(preset_values.get('diag_1', '')) if selected_preset != "None" else 0)
-number_diagnoses = st.number_input("Number of Diagnoses", min_value=1, max_value=16, value=preset_values.get('number_diagnoses', 1) if selected_preset != "None" else 1)
-change = st.selectbox("Change", [0, 1], index=preset_values.get('change', 0) if selected_preset != "None" else 0)
+# number_diagnoses = st.number_input("Number of Diagnoses", min_value=1, max_value=16, value=preset_values.get('number_diagnoses', 1) if selected_preset != "None" else 1)
+# change = st.selectbox("Change", [0, 1], index=preset_values.get('change', 0) if selected_preset != "None" else 0)
 total_visits = st.number_input("Number of visits to hospital", min_value=0, max_value=80, value=preset_values.get('total_visits', 0) if selected_preset != "None" else 0)
+st.caption('Select "1" if it\'s more than Eight or else "0"', unsafe_allow_html=False, help=None)
+high_number_diagnoses = st.selectbox('Number of Medical Diagnosis',[0, 1], index=(preset_values.get('high_number_diagnoses', 0)) if selected_preset != "None" else 0)
+
 
 
 # admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()))
@@ -133,9 +139,9 @@ input_data = pd.DataFrame({
     'num_procedures': [num_procedures],
     'num_medications': [num_medications],
     'diag_1': [diag_1],
-    'number_diagnoses': [number_diagnoses],
-    'change': [change],
-    'total_visits': [total_visits]
+    'total_visits': [total_visits],
+    'high_number_diagnoses': [high_number_diagnoses]
+    # 'change': [change],
 })
 
 # Make predictions
