@@ -9,6 +9,7 @@ Developed a machine learning model to predict the likelihood of hospital readmis
 https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-prediction?select=diabetic_data.csv 
 
 **Tools Used**
+
 Python: 
 Python is the primary programming language used for developing the application. It is known for its simplicity, readability, and extensive libraries for data manipulation, web development, and API integration.
 
