@@ -13,7 +13,6 @@ from joblib import dump
 # ------------------------------------------------------
 REMOTE_DATA = 'training_data.csv'
 
-
 # ------------------------------------------------------
 #                        CONFIG
 # ------------------------------------------------------
@@ -39,21 +38,17 @@ def get_data():
 #                         APP
 # ------------------------------------------------------
 
-# ------------------------------
-# PART 0 : Overview
-# ------------------------------
-# Display your image at the top
+# Display image at the top
 st.image('diab.jpg', use_column_width=True)  
 st.title('Patients Re-admission Prediction')
 
 df_base = get_data()
 
 # Load the trained model and label encoder
-# model = load('Random_forest_compress.joblib')
 model = load('RandomForestClassifier.joblib')
 
 label_encoder = load('label_encoder.joblib')
-
+# Incase of compressing
 # dump(model, 'Random_forest_compress.joblib',compress=3)
 
 # Preset values
@@ -93,14 +88,6 @@ if selected_preset != "None":
     preset_values = presets[selected_preset]
     st.sidebar.write(f"Loaded {selected_preset} values")
 
-# st.sidebar.title("Add your medical records")
-# medical_specialty = st.sidebar.selectbox("Select your medical specialty", df_base['medical_specialty'].unique(), index=df_base['medical_specialty'].unique().tolist().index(preset_values.get('medical_specialty', '')) if selected_preset != "None" else 0)
-# st.sidebar.caption('Select "1" if it\'s more than three or else "0"', unsafe_allow_html=False, help=None)
-# high_num_procedures = st.sidebar.selectbox('Number of Medical procedures', [0, 1], index=(preset_values.get('high_num_procedures', 0)) if selected_preset != "None" else 0)
-# st.sidebar.caption('Select "1" if it\'s more than Eight or else "0"', unsafe_allow_html=False, help=None)
-# high_number_diagnoses = st.sidebar.selectbox('Number of Medical Diagnosis',[0, 1], index=(preset_values.get('high_number_diagnoses', 0)) if selected_preset != "None" else 0)
-
-
 # Create input fields
 st.subheader("Enter your details")
 admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()), index=preset_values.get('admission_type_id', 0) if selected_preset != "None" else 0)
@@ -113,21 +100,8 @@ diag_1 = st.selectbox("Select your primary diagnosis", df_base['diag_1'].unique(
 # number_diagnoses = st.number_input("Number of Diagnoses", min_value=1, max_value=16, value=preset_values.get('number_diagnoses', 1) if selected_preset != "None" else 1)
 # change = st.selectbox("Change", [0, 1], index=preset_values.get('change', 0) if selected_preset != "None" else 0)
 total_visits = st.number_input("Number of visits to hospital", min_value=0, max_value=80, value=preset_values.get('total_visits', 0) if selected_preset != "None" else 0)
-st.caption('Select "1" if it\'s more than Eight or else "0"', unsafe_allow_html=False, help=None)
 high_number_diagnoses = st.selectbox('Number of Medical Diagnosis',[0, 1], index=(preset_values.get('high_number_diagnoses', 0)) if selected_preset != "None" else 0)
-
-
-
-# admission_type_id = st.selectbox("Select your admission type", sorted(df_base['admission_type_id'].unique()))
-# discharge_disposition_id = st.selectbox("Select your admission type", sorted(df_base['discharge_disposition_id'].unique()))
-# time_in_hospital = st.number_input("Enter your time in Hospital", min_value=1,max_value=14)
-# medical_specialty = st.selectbox("Select your medical speciality", sorted(df_base['medical_specialty'].unique()))
-# num_procedures = st.number_input("Number of Procedures", min_value=0,max_value=6)
-# num_medications = st.number_input("Number of Medications", min_value=1,max_value=81)
-# diag_1 = st.selectbox("Select your primary diagnosis", sorted(df_base['diag_1'].unique()))
-# number_diagnoses = st.number_input("Number of Diagnoses", min_value=1,max_value=16)
-# change = st.selectbox("Change", [0, 1])
-# total_visits = st.number_input("Number of visits to hospital", min_value=0,max_value=80)
+st.caption('Select "1" if it\'s more than Eight or else "0"', unsafe_allow_html=False, help=None)
 
 
 # Create a DataFrame from user inputs

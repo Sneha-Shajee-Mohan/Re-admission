@@ -80,7 +80,7 @@ y_test = test_data['readmitted']
 # Handle class imbalance using class weights
 class_weights = dict(pd.Series(y_train).value_counts(normalize=True).apply(lambda x: 1/x).to_dict())
 
-# Initialize the RandomForestClassifier with the best parameters
+# Initialize the RandomForestClassifier with the best parameters(selected after going through gridsearchCV with param grids)
 
 clf = RandomForestClassifier(
    random_state=42,
@@ -92,10 +92,12 @@ clf = RandomForestClassifier(
 )
 clf.fit(X_train, y_train)
 # print(X_train.columns)
+
+# CV-SCORE 
 # cv_scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='roc_auc')
 # print("Cross-validation ROC-AUC scores:", cv_scores)
 # print("Mean cross-validation ROC-AUC score:", np.mean(cv_scores))
 
 # Save the model
-dump(clf, 'RandomForestClassifier.joblib')
-dump(le, 'label_encoder.joblib')
+# dump(clf, 'RandomForestClassifier.joblib')
+# dump(le, 'label_encoder.joblib')
