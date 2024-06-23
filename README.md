@@ -4,6 +4,10 @@
 
 Developed a machine learning model to predict the likelihood of hospital readmission of diabetic patients based on their medical history, diagnosis data, medication, demographics, and treatment data. The goal is to provide healthcare providers with a tool to identify patients at high risk of readmission, enabling targeted interventions to reduce readmission rates and improve patient outcomes.
 
+**Application Link**
+
+https://re-admission-bcpjmbj9ry9imw8mhlrn3r.streamlit.app/
+
 **Data Preference**
 
 https://www.kaggle.com/datasets/saurabhtayal/diabetic-patients-readmission-prediction?select=diabetic_data.csv 
