@@ -69,6 +69,7 @@ The Backblaze application, often referred to as Backblaze Personal Backup or Bac
 
 7. Deployment
    Developed a user-friendly interface using Streamlit.
+   A sidebar with presets is added to the application for the ease of selecting the values to the available features.
 
 
 **Ethical Concerns**
