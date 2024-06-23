@@ -41,6 +41,7 @@ The Backblaze application, often referred to as Backblaze Personal Backup or Bac
 **Algorithm Description**
 
 1. Data Collection and Preprocessing
+   
    The initial dataset comprises over 100,000 records with 50 features. It underwent meticulous preprocessing, including datatype conversion, removal of NaN values, replacement of unknown values, mapping of integers to corresponding strings, and ultimately the selection of a baseline dataset for further training.
 
 2. Key Variables
@@ -50,6 +51,7 @@ The Backblaze application, often referred to as Backblaze Personal Backup or Bac
     • Features: admission_type_id, discharge_disposition_id, time_in_hospital, medical_specialty,  num_procedures, num_medications, total visits, diagnosis, high number of diagnoses.
 
 3. Feature Engineering
+   
    Feature engineering is a critical step in preparing the dataset for model training. It involves creating new features, transforming existing ones, and removing redundant or irrelevant features to improve the model's performance. 
 
    A new feature "total_visits" was created by summing up the number of outpatient, emergency, and inpatient visits. This feature provides a comprehensive view of a patient's total interactions with healthcare services.
@@ -60,10 +62,12 @@ The Backblaze application, often referred to as Backblaze Personal Backup or Bac
 
 
 4. Handling Class Imbalance
+   
    Calculate the class weights based on the inverse of the class frequencies in the training set to address class imbalance.
    Synthetic sampling methods like ADASYN (Adaptive Synthetic Sampling) and SMOTE (Synthetic Minority Over-sampling Technique) are often used to address class imbalance by creating synthetic examples of the minority class. While these methods can be very useful, they also have some potential drawbacks and limitations that may affect the performance and reliability of the resulting models.
 
 5. Model Training and Evaluation
+   
    A RandomForestClassifier with the computed class weights and the best parameters obtained from tuning was chosen as the final model
    The model was chosen based on the model's performance on precision, recall, and F1-score.
 
@@ -72,6 +76,7 @@ The Backblaze application, often referred to as Backblaze Personal Backup or Bac
    Class imbalance is a common challenge in many real-world datasets, where the number of instances in one class significantly outnumbers those in another. This imbalance can lead to models that are biased towards the majority class, often resulting in high accuracy but poor performance in identifying the minority class. my project faces such an imbalance, with a critical need to correctly identify instances of the minority class. Hence, i prioritized improving recall over accuracy. Recall measures the model's ability to correctly identify all relevant instances of the minority class, which is crucial in scenarios like medical diagnoses or fraud detection, where missing a positive case can have severe consequences. By focusing on recall, we ensure that our model is more sensitive to detecting the minority class, thereby reducing false negatives and improving overall performance in critical applications. This approach helps create a more balanced and effective model, even in the presence of significant class imbalance.
 
 7. Deployment
+   
    Developed a user-friendly interface using Streamlit.
    A sidebar with presets is added to the application for the ease of selecting the values to the available features.
 
