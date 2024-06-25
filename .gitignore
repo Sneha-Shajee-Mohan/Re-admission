@@ -3,7 +3,7 @@ __pycache__*
 *.pyc
 
 # app
- .env
+.env
 scratch.ipynb
 # *.pickle
 
