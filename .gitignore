@@ -1,10 +1,12 @@
 # iPython
+.ipynb*
 __pycache__*
 *.pyc
 
 # app
 .env
 scratch.ipynb
+data*
 # *.pickle
 
 # macOS
